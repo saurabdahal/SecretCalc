@@ -23,5 +23,15 @@ class Calculator {
         return left - right
     }
 
+    /**
+     * Performs multiplication operation between two parameters.
+     * @param left The first integer to multiply.
+     * @param right The second integer to multiply.
+     * @return The product of the two integers.
+     */
+    fun Multiply(left: Int, right: Int): Int {
+        return left * right
+    }
+
 
 }
