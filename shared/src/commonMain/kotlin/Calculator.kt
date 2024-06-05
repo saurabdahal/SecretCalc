@@ -13,5 +13,15 @@ class Calculator {
         return left + right
     }
 
+    /**
+     * Performs subtraction operation between two parameters.
+     * @param left The first integer to be subtracted from.
+     * @param right The integer to subtract.
+     * @return The difference between the two integers.
+     */
+    fun Subtract(left: Int, right: Int): Int {
+        return left - right
+    }
+
 
 }
