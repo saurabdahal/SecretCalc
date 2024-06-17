@@ -14,8 +14,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -42,8 +44,25 @@ class MainActivity : ComponentActivity() {
  */
 
 @Composable
-fun CalcView(){
-    val displayText = remember { mutableStateOf("0") }
+fun CalcView() {
+    val displayText = rememberSaveable { mutableStateOf("0") }
+    val leftNumber = rememberSaveable { mutableStateOf(0) }
+    val rightNumber = rememberSaveable { mutableStateOf(0) }
+    val operation = rememberSaveable { mutableStateOf("") }
+    val complete = rememberSaveable { mutableStateOf(false) }
+
+    if (complete.value && operation.value.isNotEmpty()) {
+        var answer = 0
+        when (operation.value) {
+            "+" -> answer = leftNumber.value + rightNumber.value
+            "-" -> answer = leftNumber.value - rightNumber.value
+            "*" -> answer = leftNumber.value * rightNumber.value
+            "/" -> answer = leftNumber.value / rightNumber.value
+        }
+        displayText.value = answer.toString()
+        complete.value = false
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,18 +77,20 @@ fun CalcView(){
                 }
                 Row {
                     CalcNumericButton(number = 0, display = displayText)
-                    CalcEqualsButton(display = displayText)
+                    CalcEqualsButton(display = displayText, leftNumber, rightNumber, operation, complete)
                 }
             }
             Column(modifier = Modifier.weight(1f)) {
-                CalcOperationButton(operation = "+", display = displayText)
-                CalcOperationButton(operation = "-", display = displayText)
-                CalcOperationButton(operation = "*", display = displayText)
-                CalcOperationButton(operation = "/", display = displayText)
+                CalcOperationButton(operation = "+", display = displayText, leftNumber, rightNumber, operation, complete)
+                CalcOperationButton(operation = "-", display = displayText, leftNumber, rightNumber, operation, complete)
+                CalcOperationButton(operation = "*", display = displayText, leftNumber, rightNumber, operation, complete)
+                CalcOperationButton(operation = "/", display = displayText, leftNumber, rightNumber, operation, complete)
             }
         }
     }
 }
+
+
 
 /**
 Composable to format the structure of the buttons
