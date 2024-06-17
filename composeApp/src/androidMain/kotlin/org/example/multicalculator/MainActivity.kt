@@ -76,8 +76,11 @@ fun CalcView() {
         // Implement logic for handling numeric button presses here
     }
 
-    fun operationPress() {
-        // Implement logic for handling operation button presses here
+
+    fun operationPress(op: String) {
+        if (!complete.value) {
+            operation.value = op
+        }
     }
 
     fun equalsPress() {
