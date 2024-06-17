@@ -61,6 +61,13 @@ fun CalcView() {
         }
         displayText.value = answer.toString()
         complete.value = false
+    }else if (operation.value.isNotEmpty() && !complete.value) {
+        try {
+            leftNumber.value = displayText.value.toInt()
+            displayText.value = ""
+        } catch (e: NumberFormatException) {
+            println(e.message)
+        }
     }
 
     Column(
