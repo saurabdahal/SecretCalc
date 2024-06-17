@@ -72,6 +72,19 @@ fun CalcView() {
         displayText.value = leftNumber.value.toString()
     }
 
+    fun numberPress() {
+        // Implement logic for handling numeric button presses here
+    }
+
+    fun operationPress() {
+        // Implement logic for handling operation button presses here
+    }
+
+    fun equalsPress() {
+        // Implement logic for handling equals button press here
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
