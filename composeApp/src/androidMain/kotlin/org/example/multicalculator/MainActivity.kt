@@ -72,8 +72,20 @@ fun CalcView() {
         displayText.value = leftNumber.value.toString()
     }
 
-    fun numberPress() {
-        // Implement logic for handling numeric button presses here
+    fun numberPress(btnNum: Int) {
+        if (complete.value) {
+            leftNumber.value = 0
+            rightNumber.value = 0
+            operation.value = ""
+            complete.value = false
+        }
+
+        val currentDisplay = displayText.value
+        if (currentDisplay == "0" || operation.value.isNotEmpty()) {
+            displayText.value = btnNum.toString()
+        } else {
+            displayText.value = currentDisplay + btnNum.toString()
+        }
     }
 
 
