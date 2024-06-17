@@ -81,7 +81,7 @@ fun CalcView() {
     }
 
     fun equalsPress() {
-        // Implement logic for handling equals button press here
+        complete.value = true
     }
 
 
