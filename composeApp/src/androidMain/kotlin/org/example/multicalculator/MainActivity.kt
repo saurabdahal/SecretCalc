@@ -64,10 +64,12 @@ fun CalcView() {
     }else if (operation.value.isNotEmpty() && !complete.value) {
         try {
             leftNumber.value = displayText.value.toInt()
-            displayText.value = ""
+            displayText.value = rightNumber.value.toString();
         } catch (e: NumberFormatException) {
             println(e.message)
         }
+    }else {
+        displayText.value = leftNumber.value.toString()
     }
 
     Column(
