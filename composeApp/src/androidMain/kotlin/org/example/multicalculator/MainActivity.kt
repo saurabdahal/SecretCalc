@@ -10,15 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,18 +45,18 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun CalcView() {
     val displayText = rememberSaveable { mutableStateOf("0") }
-    val leftNumber = rememberSaveable { mutableStateOf(0) }
-    val rightNumber = rememberSaveable { mutableStateOf(0) }
+    val leftNumber = rememberSaveable { mutableIntStateOf(0) }
+    val rightNumber = rememberSaveable { mutableIntStateOf(0) }
     val operation = rememberSaveable { mutableStateOf("") }
     val complete = rememberSaveable { mutableStateOf(false) }
 
     if (complete.value && operation.value.isNotEmpty()) {
         var answer = 0
         when (operation.value) {
-            "+" -> answer = leftNumber.value + rightNumber.value
-            "-" -> answer = leftNumber.value - rightNumber.value
-            "*" -> answer = leftNumber.value * rightNumber.value
-            "/" -> answer = leftNumber.value / rightNumber.value
+            "+" -> answer = leftNumber.intValue + rightNumber.intValue
+            "-" -> answer = leftNumber.intValue - rightNumber.intValue
+            "*" -> answer = leftNumber.intValue * rightNumber.intValue
+            "/" -> answer = leftNumber.intValue / rightNumber.intValue
         }
         displayText.value = answer.toString()
         complete.value = false
@@ -160,8 +157,9 @@ Composable to format the structure of the buttons
  * @param numButtons: Int : this determines how many buttons we need in a row
  */
 
+@Composable
 fun CalcRow(
-    onPress: (number: Int) -> Unit,
+    onPress: (number: Int) -> Unit, // Pass onPress lambda instead of displayText
     startNum: Int,
     numButtons: Int
 ) {
@@ -169,7 +167,7 @@ fun CalcRow(
 
     Row(modifier = Modifier.padding(0.dp)) { // Row with 0dp padding
         for (i in startNum until endNum) {
-            CalcNumericButton(number = i, onPress = onPress)
+            CalcNumericButton(number = i, onPress = onPress) // Pass onPress to CalcNumericButton
         }
     }
 }
