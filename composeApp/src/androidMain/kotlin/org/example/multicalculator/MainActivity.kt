@@ -84,7 +84,12 @@ fun CalcView() {
         if (currentDisplay == "0" || operation.value.isNotEmpty()) {
             displayText.value = btnNum.toString()
         } else {
-            displayText.value = currentDisplay + btnNum.toString()
+            // Handle number input based on operation and complete state
+            if (operation.value.isNotEmpty() && !complete.value) {
+                rightNumber.value = rightNumber.value * 10 + btnNum
+            } else {
+                leftNumber.value = leftNumber.value * 10 + btnNum
+            }
         }
     }
 
