@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -142,18 +144,20 @@ Composable to format the structure of the buttons
  * @param numButtons: Int : this determines how many buttons we need in a row
  */
 
-@Composable
 fun CalcRow(
-    display: MutableState<String>, startNum: Int, numButtons: Int
+    onPress: (number: Int) -> Unit,
+    startNum: Int,
+    numButtons: Int
 ) {
     val endNum = startNum + numButtons
 
     Row(modifier = Modifier.padding(0.dp)) { // Row with 0dp padding
         for (i in startNum until endNum) {
-            CalcNumericButton(number = i, display = display)
+            CalcNumericButton(number = i, onPress = onPress)
         }
     }
 }
+
 
 /**
  * Composable function for displaying the calculator's output.
@@ -179,9 +183,9 @@ fun CalcDisplay(display: MutableState<String>) {
  */
 
 @Composable
-fun CalcNumericButton(number: Int, display: MutableState<String>) {
+fun CalcNumericButton(number: Int, onPress: (number: Int) -> Unit) {
     Button(
-        onClick = { display.value += number },
+        onClick = { onPress(number) },
         modifier = Modifier.padding(4.dp)
     ) {
         Text(text = number.toString())
