@@ -50,7 +50,7 @@ fun CalcView() {
     val operation = rememberSaveable { mutableStateOf("") }
     val complete = rememberSaveable { mutableStateOf(false) }
 
-    if (complete.value && operation.value.isNotEmpty()) {
+    if (!complete.value && operation.value.isNotEmpty()) {
         var answer = 0
         when (operation.value) {
             "+" -> answer = leftNumber.intValue + rightNumber.intValue
@@ -63,18 +63,18 @@ fun CalcView() {
     }else if (operation.value.isNotEmpty() && !complete.value) {
         try {
             leftNumber.value = displayText.value.toInt()
-            displayText.value = rightNumber.value.toString();
+            displayText.value = rightNumber.intValue.toString();
         } catch (e: NumberFormatException) {
             println(e.message)
         }
     }else {
-        displayText.value = leftNumber.value.toString()
+        displayText.value = leftNumber.intValue.toString()
     }
 
     fun numberPress(btnNum: Int) {
         if (complete.value) {
-            leftNumber.value = 0
-            rightNumber.value = 0
+            leftNumber.intValue = 0
+            rightNumber.intValue = 0
             operation.value = ""
             complete.value = false
         }
@@ -83,11 +83,10 @@ fun CalcView() {
         if (currentDisplay == "0" || operation.value.isNotEmpty()) {
             displayText.value = btnNum.toString()
         } else {
-            // Handle number input based on operation and complete state
             if (operation.value.isNotEmpty() && !complete.value) {
-                rightNumber.value = rightNumber.value * 10 + btnNum
+                rightNumber.intValue = rightNumber.intValue * 10 + btnNum
             } else {
-                leftNumber.value = leftNumber.value * 10 + btnNum
+                leftNumber.intValue = leftNumber.intValue * 10 + btnNum
             }
         }
     }
@@ -100,6 +99,7 @@ fun CalcView() {
     }
 
     fun equalsPress() {
+        operation.value = ""
         complete.value = true
     }
 
@@ -122,7 +122,9 @@ fun CalcView() {
                 }
                 Row {
                     CalcNumericButton(number = 0, onPress = { number -> numberPress(number) })
-                    CalcEqualsButton(onPress = { equalsPress() })
+                    CalcEqualsButton(onPress = {
+                        equalsPress()
+                    })
                 }
             }
             Column(modifier = Modifier.weight(1f)) {
@@ -151,7 +153,6 @@ fun CalcView() {
 
 /**
 Composable to format the structure of the buttons
- * @param display: MutableState<String> : display parameter which is the main component to
  *  handle display on the app
  * @param startNum: Int : this is the starting number for the numeric button
  * @param numButtons: Int : this determines how many buttons we need in a row
@@ -159,15 +160,15 @@ Composable to format the structure of the buttons
 
 @Composable
 fun CalcRow(
-    onPress: (number: Int) -> Unit, // Pass onPress lambda instead of displayText
+    onPress: (number: Int) -> Unit,
     startNum: Int,
     numButtons: Int
 ) {
     val endNum = startNum + numButtons
 
-    Row(modifier = Modifier.padding(0.dp)) { // Row with 0dp padding
+    Row(modifier = Modifier.padding(0.dp)) {
         for (i in startNum until endNum) {
-            CalcNumericButton(number = i, onPress = onPress) // Pass onPress to CalcNumericButton
+            CalcNumericButton(number = i, onPress = onPress)
         }
     }
 }
@@ -193,7 +194,6 @@ fun CalcDisplay(display: MutableState<String>) {
  * Composable to handle numeric buttons. Any feature on the buttons can be
  * modified from this method
  * @param number: Int : Number that is displayed on the button
- * @param display: MutableState<String> : the value that is displayed on the display
  */
 
 @Composable
@@ -210,7 +210,6 @@ fun CalcNumericButton(number: Int, onPress: (number: Int) -> Unit) {
  * Composable to handle Operation buttons. Any feature on the buttons can be
  * modified from this method
  * @param operation: String : Operation that is displayed on the button
- * @param display: MutableState<String> : the value that is displayed on the display
  */
 @Composable
 fun CalcOperationButton(operation: String, onPress: (operation: String) -> Unit) {
@@ -225,7 +224,6 @@ fun CalcOperationButton(operation: String, onPress: (operation: String) -> Unit)
 /**
  * Composable to handle Equals buttons. Any feature on the buttons can be
  * modified from this method
- * @param display: MutableState<String> : the value that is displayed on the display
  */
 @Composable
 fun CalcEqualsButton(onPress: () -> Unit) {
