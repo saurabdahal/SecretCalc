@@ -26,11 +26,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.twilio.Twilio
-import com.twilio.rest.api.v2010.account.Message
-import com.twilio.type.PhoneNumber
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Credentials
@@ -123,14 +121,14 @@ fun CalcView() {
     }
 
     fun twilioRest(){
-        val accountSid = ""
-        val authToken = ""
+        val accountSid = "AC29bc8545692d6d112f1b0de0ef097d63"
+        val authToken = "6f997613ab3f0dadd7bffd0b9743bb39"
 
-        val fromPhoneNumber = PhoneNumber("+17723104281")
-        val toPhoneNumber = PhoneNumber("+17059216266")
-        val messageBody = "Maas ki daal"
+        val fromPhoneNumber = "+17723104281"
+        val toPhoneNumber = "+17059216266"
+        val messageBody = "36"
 
-        val messageCreator = Message.creator(toPhoneNumber, fromPhoneNumber, messageBody)
+        //val messageCreator = Message.creator(toPhoneNumber, fromPhoneNumber, messageBody)
 
         val client = OkHttpClient()
         val request = Request.Builder()
