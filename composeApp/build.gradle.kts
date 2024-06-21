@@ -31,6 +31,10 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(projects.shared)
+            implementation(libs.twilio.v800)
+            implementation("org.apache.httpcomponents:httpclient:4.5.14")
+            implementation ("com.squareup.okhttp3:okhttp:4.9.2")
+
         }
     }
 }
@@ -53,6 +57,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/DEPENDENCIES"
         }
     }
     buildTypes {

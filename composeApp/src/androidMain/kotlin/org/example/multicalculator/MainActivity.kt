@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +20,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,9 +28,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
-import androidx.compose.runtime.getValue
+import com.twilio.Twilio
+import com.twilio.rest.api.v2010.account.Message
+import com.twilio.type.PhoneNumber
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Credentials
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okio.IOException
 
 class MainActivity : ComponentActivity() {
     /**
@@ -111,6 +122,50 @@ fun CalcView() {
         displayText.value = "0"
     }
 
+    fun twilioRest(){
+        val accountSid = ""
+        val authToken = ""
+
+        val fromPhoneNumber = PhoneNumber("+17723104281")
+        val toPhoneNumber = PhoneNumber("+17059216266")
+        val messageBody = "Maas ki daal"
+
+        val messageCreator = Message.creator(toPhoneNumber, fromPhoneNumber, messageBody)
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("https://api.twilio.com/2010-04-01/Accounts/$accountSid/Messages")
+            .post(
+                FormBody.Builder()
+                    .add("To", toPhoneNumber.toString())
+                    .add("From", fromPhoneNumber.toString())
+                    .add("Body", messageBody)
+                    .build()
+            )
+            .header("Authorization", Credentials.basic(accountSid, authToken))
+            .header("Content-Type","application/x-www-form-urlencoded")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                displayText.value = "Failed to send SMS: ${e.message}"
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    displayText.value = "SMS sent successfully!"
+                } else {
+                    displayText.value = "Failed to send SMS: ${response.message} " +
+                            "and code is ${response.code}"
+
+                    println("error : ${response.networkResponse}")
+                }
+                response.close()
+            }
+        })
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -133,7 +188,8 @@ fun CalcView() {
                         equalsPress()
                     })
                     ResetDisplaysButton(onPress = {
-                        reset()
+//                        twilioClient()
+                        twilioRest()
                     })
                 }
             }
@@ -229,7 +285,7 @@ fun CalcNumericButton(number: Int, onPress: (number: Int) -> Unit) {
 }
 
 /**
- * Composable to handle Operation buttons. Any feature on the buttons can be
+ * Composable to  handle Operation buttons. Any feature on the buttons can be
  * modified from this method
  * @param operation: String : Operation that is displayed on the button
  */
