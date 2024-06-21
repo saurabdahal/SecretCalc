@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    id("com.google.gms.google-services")
 }
 
 kotlin {
@@ -73,9 +74,15 @@ android {
     }
     dependencies {
         debugImplementation(compose.uiTooling)
+        implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+        implementation("com.google.firebase:firebase-analytics")
     }
 }
 dependencies {
+
+
     implementation(libs.androidx.material3.android)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.common.ktx)
 }
 

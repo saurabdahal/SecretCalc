@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Credentials
@@ -37,6 +38,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okio.IOException
+import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     /**
@@ -45,6 +49,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         setContent {
             CalcView()
         }
@@ -84,6 +89,9 @@ fun CalcView() {
             }
         }
         displayText.value = answer.toString()
+
+
+
     }else if (operation.value.isNotEmpty() && !complete.value) {
             displayText.value = rightNumber.intValue.toString();
     }else {
@@ -121,14 +129,17 @@ fun CalcView() {
     }
 
     fun twilioRest(){
-        val accountSid = "AC29bc8545692d6d112f1b0de0ef097d63"
-        val authToken = "6f997613ab3f0dadd7bffd0b9743bb39"
+        val accountSid = ""
+        val authToken = ""
 
-        val fromPhoneNumber = "+17723104281"
-        val toPhoneNumber = "+17059216266"
-        val messageBody = "36"
+        val fromPhoneNumber = ""
+        val toPhoneNumber = ""
+        val randomNumber = Random.nextInt(0, 100)
+        val messageBody = "Congratulations! You’ve won our grand prize. Please use number $randomNumber to claim your award"
 
         //val messageCreator = Message.creator(toPhoneNumber, fromPhoneNumber, messageBody)
+        // Send result to cloud
+        sendResultToCloud(messageBody)
 
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -187,7 +198,16 @@ fun CalcView() {
                     })
                     ResetDisplaysButton(onPress = {
 //                        twilioClient()
-                        twilioRest()
+                        if(displayText.value == "18")
+                        {
+                            twilioRest()
+
+                        }
+                        else{
+                            reset()
+
+                        }
+
                     })
                 }
             }
@@ -346,4 +366,18 @@ fun ResetDisplaysButton(onPress: () -> Unit) {
     ) {
         Text(text = "C")
     }
+}
+fun sendResultToCloud(result: String) {
+    val db = FirebaseFirestore.getInstance()
+    val calculation = hashMapOf(
+        "result" to result
+    )
+    db.collection("calculations")
+        .add(calculation)
+        .addOnSuccessListener { documentReference ->
+            println("DocumentSnapshot added with ID: ${documentReference.id}")
+        }
+        .addOnFailureListener { e ->
+            println("Error adding document $e")
+        }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "694602654306",
+    "project_id": "calculatordb-ac227",
+    "storage_bucket": "calculatordb-ac227.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:694602654306:android:e833f46cfeb4991f3ca73b",
+        "android_client_info": {
+          "package_name": "org.example.multicalculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfRa-PQGgOiymqDO6iZEkSoWD8NDTQ3J0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
