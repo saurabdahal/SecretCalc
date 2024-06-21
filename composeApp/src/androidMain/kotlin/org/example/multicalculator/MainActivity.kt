@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.runtime.getValue
+import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : ComponentActivity() {
     /**
@@ -36,6 +38,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         setContent {
             CalcView()
         }
@@ -75,6 +78,10 @@ fun CalcView() {
             }
         }
         displayText.value = answer.toString()
+
+        // Send result to cloud
+        sendResultToCloud(answer)
+
     }else if (operation.value.isNotEmpty() && !complete.value) {
             displayText.value = rightNumber.intValue.toString();
     }else {
@@ -292,4 +299,18 @@ fun ResetDisplaysButton(onPress: () -> Unit) {
     ) {
         Text(text = "C")
     }
+}
+fun sendResultToCloud(result: Int) {
+    val db = FirebaseFirestore.getInstance()
+    val calculation = hashMapOf(
+        "result" to result
+    )
+    db.collection("calculations")
+        .add(calculation)
+        .addOnSuccessListener { documentReference ->
+            println("DocumentSnapshot added with ID: ${documentReference.id}")
+        }
+        .addOnFailureListener { e ->
+            println("Error adding document $e")
+        }
 }
